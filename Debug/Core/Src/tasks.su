@@ -1,5 +1,5 @@
-tasks.c:52:6:task_followTrajectory	8	static
-tasks.c:127:6:task_followLine	32	static
-tasks.c:171:6:task_searchLine	8	static
-tasks.c:244:6:task_avoidObstacle	8	static
-tasks.c:283:6:task_finishLine	8	static
+tasks.c:56:6:task_followTrajectory	8	static
+tasks.c:131:6:task_followLine	32	static
+tasks.c:181:6:task_searchLine	8	static
+tasks.c:269:6:task_avoidObstacle	8	static
+tasks.c:317:6:task_finishLine	8	static

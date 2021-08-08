@@ -29,6 +29,10 @@
 #define HALF_PERIMETER_DEGREE 100
 #define NEXT_PERIMETER_LENGTH 80
 
+/* Properties to avoid obstacle */
+#define OBSTACLE_REVERSE_LENGTH 25
+#define OBSTACLE_TURN_DEGREE    55
+
 /* Time until the robot eventually stops */
 #define FINISH_LINE_SPURT 100
 
@@ -180,8 +184,11 @@ void task_searchLine()
 	{
 		/* Check left perimeter */
 		case LEFT:
-			drive(-0.5, 0.5);
-			if (encoder_left_cnt > HALF_PERIMETER_DEGREE * TICKS_TO_DEGREE)
+			if (encoder_left_cnt <= HALF_PERIMETER_DEGREE * TICKS_TO_DEGREE)
+			{
+				drive(-0.5, 0.5);
+			}
+			else
 			{
 				encoder_left_cnt = 0;
 				resetEncoderCnt();
@@ -190,8 +197,11 @@ void task_searchLine()
 			break;
 		/* Check right perimeter */
 		case RIGHT:
-			drive(0.5, -0.5);
-			if (encoder_left_cnt > HALF_PERIMETER_DEGREE * TICKS_TO_DEGREE)
+			if (encoder_left_cnt <= HALF_PERIMETER_DEGREE * TICKS_TO_DEGREE)
+			{
+				drive(0.5, -0.5);
+			}
+			else
 			{
 				resetEncoderCnt();
 				perimeter_checked = 1;
@@ -202,8 +212,11 @@ void task_searchLine()
 			if (perimeter_checked == 1)
 			{
 				/* Turn back to initial position from right */
-				drive(-0.5, 0.5);
-				if (encoder_left_cnt > HALF_PERIMETER_DEGREE * TICKS_TO_DEGREE)
+				if (encoder_left_cnt <= HALF_PERIMETER_DEGREE * TICKS_TO_DEGREE)
+				{
+					drive(-0.5, 0.5);
+				}
+				else
 				{
 					resetEncoderCnt();
 					search_line_state = DRIVE_FORWARD;
@@ -211,9 +224,12 @@ void task_searchLine()
 			}
 			else
 			{
-				drive(0.5, -0.5);
 				/* Turn back to initial position from left */
-				if (encoder_left_cnt > HALF_PERIMETER_DEGREE * TICKS_TO_DEGREE)
+				if (encoder_left_cnt <= HALF_PERIMETER_DEGREE * TICKS_TO_DEGREE)
+				{
+					drive(0.5, -0.5);
+				}
+				else
 				{
 					resetEncoderCnt();
 					search_line_state = RIGHT;
@@ -222,8 +238,11 @@ void task_searchLine()
 			break;
 		/* Drive forward to check next perimeter for line */
 		case DRIVE_FORWARD:
-			drive(0.5, 0.5);
-			if (encoder_left_cnt > NEXT_PERIMETER_LENGTH * TICKS_TO_MM)
+			if (encoder_left_cnt <= NEXT_PERIMETER_LENGTH * TICKS_TO_MM)
+			{
+				drive(0.5, 0.5);
+			}
+			else
 			{
 				perimeter_checked = 0;
 				resetEncoderCnt();
@@ -235,7 +254,7 @@ void task_searchLine()
 	/* Constantly check whether the line has been found again */
 	if (left_linesensor_state == BLACK || middle_linesensor_state == BLACK || right_linesensor_state == BLACK)
 	{
-		drive(0,0);
+		drive(0, 0);
 		setNormalSpeed();
 		search_line_state = LEFT;
 		current_state = FOLLOW_LINE;
@@ -252,24 +271,33 @@ void task_avoidObstacle()
 	switch (avoid_obstacle_state)
 	{
 		case REVERSE:
-			drive(-0.5, -0.5);
-			if (encoder_left_cnt > 5)
+			if (encoder_left_cnt <= OBSTACLE_REVERSE_LENGTH * TICKS_TO_MM)
+			{
+				drive(-0.5, -0.5);
+			}
+			else
 			{
 				resetEncoderCnt();
 				avoid_obstacle_state = TURN;
 			}
 			break;
 		case TURN:
-			drive(0.5, -0.5);
-			if (encoder_left_cnt > 7)
+			if (encoder_left_cnt <= OBSTACLE_TURN_DEGREE * TICKS_TO_DEGREE)
+			{
+				drive(0.5, -0.5);
+			}
+			else
 			{
 				resetEncoderCnt();
 				avoid_obstacle_state = CIRCUIT;
 			}
 			break;
 		case CIRCUIT:
-			drive(0.3, 0.55);
-			if (middle_linesensor_state == BLACK)
+			if (middle_linesensor_state != BLACK)
+			{
+				drive(0.3, 0.55);
+			}
+			else
 			{
 				resetEncoderCnt();
 				setNormalSpeed();

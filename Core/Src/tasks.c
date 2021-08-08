@@ -33,6 +33,9 @@
 #define OBSTACLE_REVERSE_LENGTH 25
 #define OBSTACLE_TURN_DEGREE    55
 
+/* After the obstacle has been overcome, this indicates that the robot is on the last part of the course */
+#define LAST_PART_INDICATION 75
+
 /* Time until the robot eventually stops */
 #define FINISH_LINE_SPURT 100
 
@@ -136,7 +139,8 @@ void task_followLine()
 	drive(speed_left - error * proportional_gain, speed_right + error * proportional_gain);
 
 	/* Check if robot is on the last part of the parkour to prepare for finish line  */
-	if (obstacle_passed == 1 && encoder_left_cnt > 75)
+
+	if (obstacle_passed == 1 && encoder_left_cnt > LAST_PART_INDICATION)
 	{
 		/* Here greyish/white indicates that the finish line was reached */
 		if (middle_linesensor_state == WHITE)

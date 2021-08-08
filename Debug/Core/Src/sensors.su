@@ -1,0 +1,4 @@
+sensors.c:31:6:outputSensor	144	static
+sensors.c:44:6:HAL_ADC_ConvCpltCallback	24	static
+sensors.c:61:6:SchmittTrigger	4	static
+sensors.c:93:6:detectColour	4	static

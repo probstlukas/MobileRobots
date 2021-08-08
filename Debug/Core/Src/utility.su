@@ -1,0 +1,7 @@
+utility.c:31:6:blinkLeftLED	16	static
+utility.c:46:6:blinkRightLED	16	static
+utility.c:61:6:blinkTailLight	16	static
+utility.c:76:6:blinkAllLEDs	8	static
+utility.c:88:6:setNormalSpeed	4	static
+utility.c:99:6:setMaxSpeed	4	static
+utility.c:110:6:resetEncoderCnt	4	static
